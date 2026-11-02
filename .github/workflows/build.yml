@@ -17,14 +17,49 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: gradle
 
-    - name: Grant execute permission for gradlew
-      run: chmod +x gradlew
-      working-directory: vibe-music-project
+    # Instala o Gradle oficial do sistema, sem depender do ficheiro wrapper local
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: '8.9'
 
     - name: Build APK Debug
-      run: ./gradlew assembleDebug --no-daemon
+      run: gradle assembleDebug --no-daemon
+      working-directory: vibe-music-project
+
+    - name: Upload APK
+      uses: actions/upload-artifact@v4
+      with:
+        name: vibe-music-apk
+        path: vibe-music-project/app/build/outputs/apk/debug/*.apkname: Build Vibe Music APK
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up JDK 17
+      uses: actions/setup-java@v4
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # Instala o Gradle oficial do sistema, sem depender do ficheiro wrapper local
+    - name: Setup Gradle
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: '8.9'
+
+    - name: Build APK Debug
+      run: gradle assembleDebug --no-daemon
       working-directory: vibe-music-project
 
     - name: Upload APK
