@@ -25,7 +25,7 @@ jobs:
           gradle-version: '8.9'
 
       - name: Build APK Debug
-        run: gradle assembleDebug --no-daemon
+        run: gradle assembleDebug --no-daemon --stacktrace
         working-directory: vibe-music-project
 
       - name: Upload APK
